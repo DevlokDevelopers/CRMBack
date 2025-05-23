@@ -11,10 +11,11 @@ from .views import (get_followeddata_salesmanager,get_detailed_data_salesmanager
                     Follow_lead_data,Update_data_stage,SM_monthly_performance,Admin_crm_performance_graph,Admin_graph_Leads,
                     followed_leads_admin,get_successfullyclosed_leads,get_unsuccessfullyclosed_leads,get_pending_leads,
                     admin_leads_graph_data,lead_category_graph,lead_category_current_month,Sales_lead_category_graph,Sales_lead_category_current_month,
-                    receive_google_form_rentseeker,receive_google_form_buyer,receive_google_form_forrent,receive_google_form_property_sale)
+                    receive_google_form_rentseeker,receive_google_form_buyer,receive_google_form_forrent,receive_google_form_property_sale,follow_multiple_leads)
 
 
 urlpatterns = [
+    path('follow_multiple_leads/',follow_multiple_leads,name="follow_multiple_leads"),
     path('receive_google_form_property_sale/',receive_google_form_property_sale,name="receive_google_form_property_sale"),
     path('receive_google_form_forrent/',receive_google_form_forrent,name="receive_google_form_forrent"),
     path('receive_google_form_buyer/',receive_google_form_buyer,name="receive_google_form_buyer"),

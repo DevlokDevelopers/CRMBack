@@ -754,7 +754,41 @@ def Follow_lead_data(request,lead_id):
     )
     return Response({'message': "Successfully followed the lead"}, status=200)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsSalesManagerUser])
+def follow_multiple_leads(request):
+    SManager = request.user
+    sales_manager = Sales_manager_reg.objects.filter(user=SManager.id).first()
+    lead_ids = request.data.get("lead_ids", [])
 
+    if not isinstance(lead_ids, list) or not lead_ids:
+        return Response({"error": "Please provide a list of lead_ids"}, status=400)
+
+    followed = []
+    not_found = []
+
+    for lead_id in lead_ids:
+        lead = DataBank.objects.filter(id=lead_id).first()
+        if not lead:
+            not_found.append(lead_id)
+            continue
+
+        if not LeadDataFollower.objects.filter(lead=lead, follower=sales_manager).exists():
+            LeadDataFollower.objects.create(lead=lead, follower=sales_manager)
+            lead.status = "Followed"
+            lead.save()
+            followed.append(lead_id)
+
+    return Response({
+        "message": "Follow process completed.",
+        "followed_leads": followed,
+        "not_found_leads": not_found
+    }, status=200)
+
+    
+    
+    
+    
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsSalesManagerUser])
 def manually_enter_data(request):
