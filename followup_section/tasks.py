@@ -9,15 +9,15 @@ from django.utils import timezone
 import time
 import sys
 from twilio.rest import Client
+from django.conf import settings
 
 
-TWILIO_ACCOUNT_SID = "ACe1b80056ccbacae1f088ba119ce08ccd"  # Replace with your Twilio SID
-TWILIO_AUTH_TOKEN = "db0c7f6ea998625a89e9a42e0e6069c3"  # Replace with your Twilio auth token
+
 TWILIO_WHATSAPP_FROM = "whatsapp:+919562080200"
 TWILIO_CLIENT_TEMPLATE_SID = "HX5dbd4c2e3c1a9dfe658ecc1bbd586ba8"  # Replace this
 TWILIO_STAFF_TEMPLATE_SID = "HX434f1543b570a22fd39556c3358519f8"  # Replace this
 
-client_twilio = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 @shared_task(bind=True, max_retries=5, default_retry_delay=3)  # retry up to 5 times with 3 seconds delay
 def send_followup_notifications(self, followup_id, notification_type):
