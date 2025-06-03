@@ -26,7 +26,7 @@ urlpatterns = [
     path('followups/',include('followup_section.urls')),
     path('task/',include('task_section.urls')),
     path('project/',include('project_section.urls')),
-    path('colddata/',include('colddata_section.urls')),
+    path('colddatabank/',include('colddata_section.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     
     # View to refresh JWT token
