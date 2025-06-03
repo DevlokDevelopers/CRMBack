@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import ColdData
 from django.utils import timezone
-from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def receive_cold_data(request):
