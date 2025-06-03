@@ -70,24 +70,28 @@ client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 @api_view(['PUT'])
 @permission_classes([AllowAny])
 def receive_cold_data(request):
-    try:
-        data = request.data
-        name_phone = data.get('name_phone')
-        property_listing = data.get('property_listing', '')
+    if request.method == "POST":
 
-        if not name_phone:
-            return Response({"error": "The 'name_phone' field is required."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            data = request.data
+            name_phone = data.get('name_phone')
+            property_listing = data.get('property_listing', '')
 
-        cold_data = ColdDataBank.objects.create(
-            name_phone=name_phone,
-            property_listing=property_listing,
-            submitted_at=timezone.now()
-        )
+            if not name_phone:
+                return Response({"error": "The 'name_phone' field is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({"message": "Cold data saved successfully."}, status=status.HTTP_201_CREATED)
+            cold_data = ColdDataBank.objects.create(
+                name_phone=name_phone,
+                property_listing=property_listing,
+                submitted_at=timezone.now()
+            )
 
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Cold data saved successfully."}, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    else :
+        return Response({"error":str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
