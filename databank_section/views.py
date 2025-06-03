@@ -67,7 +67,7 @@ client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 
 
-@api_view(['PUT'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def receive_cold_data(request):
     if request.method == "POST":
