@@ -57,3 +57,8 @@ class MatchingDataPdf(models.Model):
     matching_pdf = models.FileField(upload_to='match_pdfs/', null=True, blank=True)
 
     
+class ColdDataBank(models.Model):
+    name_phone = models.CharField(max_length=150, help_text="Name and Phone number combined")
+    property_listing = models.TextField(blank=True, null=True, help_text="Details of property listings")
+
+    submitted_at = models.DateTimeField(auto_now_add=True)

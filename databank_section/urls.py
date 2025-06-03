@@ -11,7 +11,8 @@ from .views import (get_followeddata_salesmanager,get_detailed_data_salesmanager
                     Follow_lead_data,Update_data_stage,SM_monthly_performance,Admin_crm_performance_graph,Admin_graph_Leads,
                     followed_leads_admin,get_successfullyclosed_leads,get_unsuccessfullyclosed_leads,get_pending_leads,
                     admin_leads_graph_data,lead_category_graph,lead_category_current_month,Sales_lead_category_graph,Sales_lead_category_current_month,
-                    receive_google_form_rentseeker,receive_google_form_buyer,receive_google_form_forrent,receive_google_form_property_sale,follow_multiple_leads)
+                    receive_google_form_rentseeker,receive_google_form_buyer,receive_google_form_forrent,receive_google_form_property_sale,follow_multiple_leads,
+                    receive_cold_data)
 
 
 urlpatterns = [
@@ -73,7 +74,8 @@ urlpatterns = [
     path("suggestions_admin/", databank_suggestions, name="databank_suggestions"),
     path("auto_complete_search_admin/",autocomplete_databank,name="autocomplete"),
     path("salesMSearchAutoComplete/",autocomplete_databank_salesmanager,name="salesMAutoComplete"),
-    path("databank_list/",Databank,name="databank")
+    path("databank_list/",Databank,name="databank"),
+    path("receive_cold_data/",receive_cold_data,name="receivecolddate")
 
     
 ]

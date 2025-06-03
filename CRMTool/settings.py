@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'followup_section',
     'task_section',
     'project_section',
-    'colddata_section'
 ]
 
 # Middleware

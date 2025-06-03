@@ -51,7 +51,7 @@ from datetime import datetime
 from django.utils.timezone import make_aware
 from twilio.rest import Client
 from django.core.files.base import ContentFile
-from .models import MatchingDataPdf
+from .models import MatchingDataPdf,ColdDataBank
 
 
 TWILIO_WHATSAPP_FROM = "whatsapp:+919562080200"
@@ -61,6 +61,33 @@ TWILIO_MATCHEDDATA_TEMPLATE_SID = "HXeadbd83ccd838cb5a7386f8857e9d7f4"
 client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 
+
+
+
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def receive_cold_data(request):
+    try:
+        data = request.data
+        name_phone = data.get('name_phone')
+        property_listing = data.get('property_listing', '')
+
+        if not name_phone:
+            return Response({"error": "The 'name_phone' field is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        cold_data = ColdDataBank.objects.create(
+            name_phone=name_phone,
+            property_listing=property_listing,
+            submitted_at=timezone.now()
+        )
+
+        return Response({"message": "Cold data saved successfully."}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
