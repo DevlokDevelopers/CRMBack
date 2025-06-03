@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import ColdData
 from django.utils import timezone
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
