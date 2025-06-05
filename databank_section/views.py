@@ -52,6 +52,7 @@ from django.utils.timezone import make_aware
 from twilio.rest import Client
 from django.core.files.base import ContentFile
 from .models import MatchingDataPdf
+from django.views.decorators.csrf import csrf_exempt
 
 
 TWILIO_WHATSAPP_FROM = "whatsapp:+919562080200"
@@ -160,7 +161,7 @@ def receive_google_form_forrent(request):
 
 
 
-
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def receive_google_form_buyer(request):
