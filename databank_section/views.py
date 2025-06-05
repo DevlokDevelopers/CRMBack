@@ -184,7 +184,7 @@ def receive_google_form_buyer(request):
             building_bhk=data.get("building_bhk", ""),
             additional_note=data.get("additional_note", ""),
             purpose="For Buying a Property",
-            lead_category=data.get("lead_category", "Google Form"),
+            lead_category=data.get("lead_category", "Social Media"),
             status="Pending",
             stage="Pending",
         )
