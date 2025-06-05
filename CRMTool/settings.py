@@ -160,20 +160,22 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    "https://devlokdevelopers.com",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://crmbackend.up.railway.app",
     "https://devlokcrm.up.railway.app",
-    "https://devlokdevelopers.com",
+    
     
 ]
 
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://www.devlokdevelopers.com",
     "https://crmbackend.up.railway.app",
     "https://devlokcrm.up.railway.app",
     "https://devlokdevelopers.com",
-    "https://www.devlokdevelopers.com",
+    
     
 ]
 
