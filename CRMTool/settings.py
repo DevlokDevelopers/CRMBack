@@ -172,9 +172,11 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "https://crmbackend.up.railway.app",
     "https://devlokcrm.up.railway.app",
-    "https://devlokdevelopers.com"
+    "https://devlokdevelopers.com",
+    "https://www.devlokdevelopers.com",
     
 ]
+
 
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_COOKIE_HTTPONLY = False
