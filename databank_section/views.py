@@ -59,7 +59,7 @@ TWILIO_WHATSAPP_FROM = "whatsapp:+919562080200"
 TWILIO_GLM_TEMPLATE_SID = "HX63f6fd8b9b20a9374bcb48bb6c15ca77"  # Replace this
 TWILIO_MATCHEDDATA_TEMPLATE_SID = "HXeadbd83ccd838cb5a7386f8857e9d7f4" 
 
-client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+client_twilio = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 
 
@@ -1936,7 +1936,7 @@ def Buy_databank(request):
     # Check if the user is an admin
     if not hasattr(admin, 'admin_reg'):
         return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    buy_list = DataBank.objects.filter(purpose = "For Buying a Property",stage="Pending")
+    buy_list = DataBank.objects.filter(purpose = "For Buying a Property",stage="Pending").order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
@@ -1948,7 +1948,7 @@ def Sell_databank(request):
     # Check if the user is an admin
     if not hasattr(admin, 'admin_reg'):
         return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    buy_list = DataBank.objects.filter(purpose = "For Selling a Property",stage="Pending")
+    buy_list = DataBank.objects.filter(purpose = "For Selling a Property",stage="Pending").order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
@@ -1960,7 +1960,7 @@ def ForRent_databank(request):
     # Check if the user is an admin
     if not hasattr(admin, 'admin_reg'):
         return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    buy_list = DataBank.objects.filter(purpose = "For Rental or Lease",stage="Pending")
+    buy_list = DataBank.objects.filter(purpose = "For Rental or Lease",stage="Pending").order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
@@ -1972,7 +1972,7 @@ def RentSeeker_databank(request):
     # Check if the user is an admin
     if not hasattr(admin, 'admin_reg'):
         return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    buy_list = DataBank.objects.filter(purpose = "Looking to Rent or Lease Property",stage="Pending")
+    buy_list = DataBank.objects.filter(purpose = "Looking to Rent or Lease Property",stage="Pending").order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
@@ -1989,7 +1989,7 @@ def SalesM_Buy_databank(request):
         return Response({"error": "Not a valid sales manager"}, status=403)
     
     salesmanager = Sales_manager_reg.objects.filter(user=staff.id).first()
-    buy_list = DataBank.objects.filter(purpose = "For Buying a Property",stage="Pending",leaddatafollower__follower=salesmanager)
+    buy_list = DataBank.objects.filter(purpose = "For Buying a Property",stage="Pending",leaddatafollower__follower=salesmanager).order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
@@ -2005,7 +2005,7 @@ def SalesM_Sell_databank(request):
         return Response({"error": "Not a valid sales manager"}, status=403)
     
     salesmanager = Sales_manager_reg.objects.filter(user=staff.id).first()
-    sell_list = DataBank.objects.filter(purpose = "For Selling a Property",stage="Pending",leaddatafollower__follower=salesmanager)
+    sell_list = DataBank.objects.filter(purpose = "For Selling a Property",stage="Pending",leaddatafollower__follower=salesmanager).order_by('-timestamp')
     serializer = DataBankGETSerializer(sell_list,many=True).data
     return Response(serializer,status=200)
 
@@ -2022,7 +2022,7 @@ def SalesM_ForRent_databank(request):
         return Response({"error": "Not a valid sales manager"}, status=403)
     
     salesmanager = Sales_manager_reg.objects.filter(user=staff.id).first()
-    rental_list = DataBank.objects.filter(purpose = "For Rental or Lease",stage="Pending",leaddatafollower__follower=salesmanager)
+    rental_list = DataBank.objects.filter(purpose = "For Rental or Lease",stage="Pending",leaddatafollower__follower=salesmanager).order_by('-timestamp')
     serializer = DataBankGETSerializer(rental_list,many=True).data
     return Response(serializer,status=200)
 
@@ -2037,7 +2037,7 @@ def SalesM_RentSeeker_databank(request):
         return Response({"error": "Not a valid sales manager"}, status=403)
     
     salesmanager = Sales_manager_reg.objects.filter(user=staff.id).first()
-    seeker_list = DataBank.objects.filter(purpose = "Looking to Rent or Lease Property",stage="Pending",leaddatafollower__follower=salesmanager)
+    seeker_list = DataBank.objects.filter(purpose = "Looking to Rent or Lease Property",stage="Pending",leaddatafollower__follower=salesmanager).order_by('-timestamp')
     serializer = DataBankGETSerializer(seeker_list,many=True).data
     return Response(serializer,status=200)
 
