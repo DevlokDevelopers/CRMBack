@@ -67,6 +67,65 @@ client_twilio = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def receive_seller_form(request):
+    try:
+        data = request.data
+
+        # Determine the final mode_of_property value
+        mode_of_property = data.get("mode_of_property", "")
+        if mode_of_property == "Other":
+            mode_of_property = data.get("mode_of_property_other", "").strip()
+            if not mode_of_property:
+                return Response({"error": "Other property type must be specified."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create the DataBank lead
+        lead = DataBank.objects.create(
+            timestamp=timezone.now(),
+            name=data.get("name"),
+            phonenumber=data.get("phonenumber"),
+            district=data.get("district"),
+            place=data.get("place"),
+            address=data.get("address", ""),
+            mode_of_property=mode_of_property,
+            demand_price=data.get("demand_price"),
+            advance_price=data.get("advance_price", None),
+            area_in_sqft=data.get("area_in_sqft", ""),
+            area_in_cent=data.get("area_in_cent", ""),
+            building_roof=data.get("building_roof", ""),
+            number_of_floors=data.get("number_of_floors", ""),
+            building_bhk=data.get("building_bhk", ""),
+            additional_note=data.get("additional_note", ""),
+            location_link=data.get("location_link", ""),
+            purpose="For Selling a Property",
+            lead_category=data.get("lead_category", "Social Media"),
+            status="Pending",
+            stage="Pending"
+        )
+
+        # Handle multiple image files (if any)
+        images = request.FILES.getlist('images')
+        for img in images:
+            DataBankImage.objects.create(databank=lead, image=img)
+
+        # Send notification (optional)
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "notifications_group",
+            {
+                "type": "send_notification",
+                "message": f"New seller lead! Name: {lead.name}, District: {lead.district}, Property: {lead.mode_of_property}",
+            },
+        )
+
+        return Response({"message": "Seller form submitted successfully."}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 
