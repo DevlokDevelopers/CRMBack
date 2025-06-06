@@ -1973,7 +1973,7 @@ def Buy_databank(request):
     # Check if the user is an admin
     if not hasattr(admin, 'admin_reg'):
         return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    buy_list = DataBank.objects.filter(purpose = "For Buying a Property",stage="Pending").order_by('-timestamp')
+    buy_list = DataBank.objects.filter(purpose = "For Buying a Property",stage="Pending",status="Followed").order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
@@ -1985,7 +1985,7 @@ def Sell_databank(request):
     # Check if the user is an admin
     if not hasattr(admin, 'admin_reg'):
         return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    buy_list = DataBank.objects.filter(purpose = "For Selling a Property",stage="Pending").order_by('-timestamp')
+    buy_list = DataBank.objects.filter(purpose = "For Selling a Property",stage="Pending",status="Followed").order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
@@ -1997,7 +1997,7 @@ def ForRent_databank(request):
     # Check if the user is an admin
     if not hasattr(admin, 'admin_reg'):
         return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    buy_list = DataBank.objects.filter(purpose = "For Rental or Lease",stage="Pending").order_by('-timestamp')
+    buy_list = DataBank.objects.filter(purpose = "For Rental or Lease",stage="Pending",status="Followed").order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
@@ -2009,7 +2009,7 @@ def RentSeeker_databank(request):
     # Check if the user is an admin
     if not hasattr(admin, 'admin_reg'):
         return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    buy_list = DataBank.objects.filter(purpose = "Looking to Rent or Lease Property",stage="Pending").order_by('-timestamp')
+    buy_list = DataBank.objects.filter(purpose = "Looking to Rent or Lease Property",stage="Pending",status="Followed").order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
