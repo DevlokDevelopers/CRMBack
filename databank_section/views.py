@@ -1304,27 +1304,7 @@ def search_databank(request):
             "results": DataBankGETSerializer(databank_results, many=True).data
         })
 
-    # 2️⃣ If no Databank results, search in Leads
-    lead_results = Leads.objects.filter(
-        Q(name__icontains=query) |
-        Q(email__icontains=query) |
-        Q(phonenumber__icontains=query) |
-        Q(district__icontains=query) |
-        Q(place__icontains=query) |
-        Q(purpose__icontains=query) |
-        Q(mode_of_purpose__icontains=query) |
-        Q(message__icontains=query) |
-        Q(status__icontains=query) |
-        Q(stage__icontains=query) |
-        Q(follower__icontains=query)
-    )
-
-    if lead_results.exists():
-        return JsonResponse({
-            "source": "leads",
-            "results": LeadsViewSerializer(lead_results, many=True).data
-        })
-
+    
     # 3️⃣ If no Leads results, search in Projects
     project_results = Project_db.objects.filter(
         Q(project_name__icontains=query) |
