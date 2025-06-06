@@ -69,6 +69,59 @@ client_twilio = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+def receive_webform_forrent(request):
+    try:
+        data = request.data
+
+        lead = DataBank.objects.create(
+            timestamp=timezone.now(),
+            name=data.get("name"),
+            phonenumber=data.get("phonenumber"),
+            district=data.get("district"),
+            place=data.get("place"),
+            address=data.get("address", ""),
+            mode_of_property=data.get("mode_of_property"),
+            demand_price=data.get("demand_price"),
+            advance_price=data.get("advance_price", None),
+            area_in_sqft=data.get("area_in_sqft", ""),
+            area_in_cent=data.get("area_in_cent", ""),
+            building_roof=data.get("building_roof", ""),
+            number_of_floors=data.get("number_of_floors", ""),
+            building_bhk=data.get("building_bhk", ""),
+            additional_note=data.get("additional_note", ""),
+            purpose="For Rental or Lease",
+            location_link=data.get("location_link", ""),
+            lead_category=data.get("lead_category", "Social Media"),
+            status="Pending",
+            stage="Pending",
+        )
+
+        images = request.FILES.getlist('images')
+        for img in images:
+            # This will save image directly under 'databank_photos/' as per model's upload_to
+            DataBankImage.objects.create(databank=lead, image=img)
+
+        # Do NOT set or save image_folder field to avoid subfolders
+        # lead.image_folder = None  # or leave it untouched
+        # lead.save()
+
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "notifications_group",
+            {
+                "type": "send_notification",
+                "message": f"New rental lead! Name: {lead.name}, District: {lead.district}",
+            },
+        )
+
+        return Response({"message": "Rental data saved successfully."}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def receive_seller_form(request):
     try:
         data = request.data

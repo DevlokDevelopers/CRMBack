@@ -12,7 +12,7 @@ from .views import (get_followeddata_salesmanager,get_detailed_data_salesmanager
                     followed_leads_admin,get_successfullyclosed_leads,get_unsuccessfullyclosed_leads,get_pending_leads,
                     admin_leads_graph_data,lead_category_graph,lead_category_current_month,Sales_lead_category_graph,Sales_lead_category_current_month,
                     receive_google_form_rentseeker,receive_google_form_buyer,receive_google_form_forrent,receive_google_form_property_sale,follow_multiple_leads,
-                    receive_seller_form,)
+                    receive_seller_form,receive_webform_forrent)
 
 
 urlpatterns = [
@@ -76,6 +76,7 @@ urlpatterns = [
     path("salesMSearchAutoComplete/",autocomplete_databank_salesmanager,name="salesMAutoComplete"),
     path("databank_list/",Databank,name="databank"),
     path("receive_seller_form/",receive_seller_form,name="receive_seller_form"),
+    path("receive_webform_forrent/",receive_webform_forrent,name="receive_webform_forrent"),
 
     
 ]
