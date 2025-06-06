@@ -1280,7 +1280,6 @@ def search_databank(request):
         # Search in Databank
         databank_results = DataBank.objects.filter(
             Q(name__icontains=query) |
-            Q(email__icontains=query) |
             Q(phonenumber__icontains=query) |
             Q(district__icontains=query) |
             Q(place__icontains=query) |
