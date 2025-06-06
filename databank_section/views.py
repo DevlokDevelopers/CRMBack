@@ -1266,61 +1266,60 @@ def databank_suggestions(request):
 from project_section.serializers import ProjectSerializer
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated,IsCustomAdminUser])
+@permission_classes([IsAuthenticated, IsCustomAdminUser])
 def search_databank(request):
-    admin = request.user  # `request.user` will be automatically populated with the authenticated user
+    try:
+        admin = request.user
+        if not hasattr(admin, 'admin_reg'):
+            return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
 
-    # Check if the user is an admin
-    if not hasattr(admin, 'admin_reg'):
-        return Response({'error': 'Admin authentication required'}, status=status.HTTP_403_FORBIDDEN)
-    query = request.GET.get('q', '').strip()
+        query = request.GET.get('q', '').strip()
+        if not query:
+            return JsonResponse({"error": "Query parameter is required"}, status=400)
 
-    if not query:
-        return JsonResponse({"error": "Query parameter is required"}, status=400)
+        # Search in Databank
+        databank_results = DataBank.objects.filter(
+            Q(name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(phonenumber__icontains=query) |
+            Q(district__icontains=query) |
+            Q(place__icontains=query) |
+            Q(purpose__icontains=query) |
+            Q(mode_of_property__icontains=query) |
+            Q(demand_price__icontains=query) |
+            Q(location_preferences__icontains=query) |
+            Q(area_in_sqft__icontains=query) |
+            Q(building_roof__icontains=query) |
+            Q(number_of_floors__icontains=query) |
+            Q(building_bhk__icontains=query) |
+            Q(projects__project_name__icontains=query) |
+            Q(projects__importance__icontains=query)
+        ).distinct()
 
-    # 1️⃣ Search in Databank
-    databank_results = DataBank.objects.filter(
-        Q(name__icontains=query) |
-        Q(email__icontains=query) |
-        Q(phonenumber__icontains=query) |
-        Q(district__icontains=query) |
-        Q(place__icontains=query) |
-        Q(purpose__icontains=query) |
-        Q(mode_of_property__icontains=query) |
-        Q(demand_price__icontains=query) |
-        Q(location_proposal_district__icontains=query) |
-        Q(location_proposal_place__icontains=query) |
-        Q(area_in_sqft__icontains=query) |
-        Q(building_roof__icontains=query) |
-        Q(number_of_floors__icontains=query) |
-        Q(building_bhk__icontains=query) |
-        Q(projects__project_name__icontains=query) |
-        Q(projects__importance__icontains=query)
-    )
+        if databank_results.exists():
+            return JsonResponse({
+                "source": "databank",
+                "results": DataBankGETSerializer(databank_results, many=True).data
+            })
 
-    if databank_results.exists():
-        return JsonResponse({
-            "source": "databank",
-            "results": DataBankGETSerializer(databank_results, many=True).data
-        })
+        # Search in Projects
+        project_results = Project_db.objects.filter(
+            Q(project_name__icontains=query) |
+            Q(importance__icontains=query) |
+            Q(description__icontains=query)
+        )
 
-    
-    # 3️⃣ If no Leads results, search in Projects
-    project_results = Project_db.objects.filter(
-        Q(project_name__icontains=query) |
-        Q(importance__icontains=query) |
-        Q(description__icontains=query)
-    )
+        if project_results.exists():
+            return JsonResponse({
+                "source": "projects",
+                "results": ProjectSerializer(project_results, many=True).data
+            })
 
-    if project_results.exists():
-        return JsonResponse({
-            "source": "projects",
-            "results": ProjectSerializer(project_results, many=True).data
-        })
+        return JsonResponse({"source": "none", "results": []})
 
-    # 4️⃣ If no matches found in any, return empty response
-    return JsonResponse({"source": "none", "results": []})
-
+    except Exception as e:
+        print("🔥 Error in search_databank:", str(e))
+        return JsonResponse({"error": "Internal Server Error", "details": str(e)}, status=500)
 
 
 
