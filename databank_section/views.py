@@ -69,6 +69,51 @@ client_twilio = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+def receive_web_form_rentseeker(request):
+    try:
+        data = request.data
+
+        lead = DataBank.objects.create(
+            timestamp=timezone.now(),
+            name=data.get("name"),
+            phonenumber=data.get("phonenumber"),
+            district=data.get("district"),
+            place=data.get("place"),
+            address=data.get("address", ""),
+            mode_of_property=data.get("mode_of_property"),
+            demand_price=data.get("demand_price"),
+            location_preferences=data.get("location_preferences", ""),
+            additional_note=data.get("additional_note", ""),
+            area_in_sqft=data.get("area_in_sqft", ""),
+            area_in_cent=data.get("area_in_cent", ""),
+            building_roof=data.get("building_roof", ""),
+            number_of_floors=data.get("number_of_floors", ""),
+            building_bhk=data.get("building_bhk", ""),
+            purpose="Looking to Rent or Lease Property",
+            lead_category=data.get("lead_category", "Social Media"),
+            status=data.get("status", "Pending"),
+            stage=data.get("stage", "Pending"),
+        )
+
+        # Send WebSocket Notification
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "notifications_group",
+            {
+                "type": "send_notification",
+                "message": f"New lead received! Name: {lead.name}, District: {lead.district}, Purpose: {lead.purpose}",
+            },
+        )
+
+        return Response({"message": "Data saved successfully"}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def receive_webform_forrent(request):
     try:
         data = request.data
