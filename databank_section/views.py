@@ -67,6 +67,23 @@ client_twilio = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated,IsSalesManagerUser])
+def SalesM_Marketing_databank(request):
+    staff = request.user  # `request.user` will be automatically populated with the authenticated user
+
+    # Check if the user is an admin
+    if not hasattr(staff, 'sales_manager_reg'):
+        return Response({"error": "Not a valid sales manager"}, status=403)
+    
+    salesmanager = Sales_manager_reg.objects.filter(user=staff.id).first()
+    buy_list = DataBank.objects.filter(lead_category = "Marketing Data",stage="Pending",leaddatafollower__follower=salesmanager).order_by('-timestamp')
+    serializer = DataBankGETSerializer(buy_list,many=True).data
+    return Response(serializer,status=200)
+
+
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def receive_web_form_rentseeker(request):
