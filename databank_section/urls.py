@@ -12,7 +12,8 @@ from .views import (get_followeddata_salesmanager,get_detailed_data_salesmanager
                     followed_leads_admin,get_successfullyclosed_leads,get_unsuccessfullyclosed_leads,get_pending_leads,
                     admin_leads_graph_data,lead_category_graph,lead_category_current_month,Sales_lead_category_graph,Sales_lead_category_current_month,
                     receive_google_form_rentseeker,receive_google_form_buyer,receive_google_form_forrent,receive_google_form_property_sale,follow_multiple_leads,
-                    receive_seller_form,receive_webform_forrent,receive_web_form_rentseeker,SalesM_Marketing_databank,SalesM_SocialMedia_databank)
+                    receive_seller_form,receive_webform_forrent,receive_web_form_rentseeker,SalesM_Marketing_databank,SalesM_SocialMedia_databank,
+                    SalesM_MainData_databank,SalesM_GeneralData_databank)
 
 
 urlpatterns = [
@@ -79,7 +80,9 @@ urlpatterns = [
     path("receive_webform_forrent/",receive_webform_forrent,name="receive_webform_forrent"),
     path("receive_web_form_rentseeker/",receive_web_form_rentseeker,name="receive_web_form_rentseeker"),
     path("salesmanager_marketing_data/",SalesM_Marketing_databank,name="SalesM_Marketing_databank"),
-    path("salesmanager_socailmedia_data/",SalesM_SocialMedia_databank,name="SalesM_SocialMedia_databank")
+    path("salesmanager_socailmedia_data/",SalesM_SocialMedia_databank,name="SalesM_SocialMedia_databank"),
+    path("salesmanager_maindata/",SalesM_MainData_databank,name="SalesM_MainData_databank"),
+    path("salesmanager_general/",SalesM_GeneralData_databank,name="SalesM_GeneralData_databank")
 
     
 ]

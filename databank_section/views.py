@@ -121,7 +121,7 @@ def SalesM_GeneralData_databank(request):
         return Response({"error": "Not a valid sales manager"}, status=403)
     
     salesmanager = Sales_manager_reg.objects.filter(user=staff.id).first()
-    buy_list = DataBank.objects.filter(lead_category = "Social Media",stage="Pending",leaddatafollower__follower=salesmanager).order_by('-timestamp')
+    buy_list = DataBank.objects.filter(lead_category = "General Lead",stage="Pending",leaddatafollower__follower=salesmanager).order_by('-timestamp')
     serializer = DataBankGETSerializer(buy_list,many=True).data
     return Response(serializer,status=200)
 
